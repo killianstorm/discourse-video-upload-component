@@ -413,7 +413,7 @@ var VimeoUpload = function(opts) {
             view: opts.view ? opts.view : ( opts.private ? 'nobody' : 'anybody' ),
             embed: opts.embed ? opts.embed : 'public'
         },
-        folder_uri: '/folders/12116692'
+        folder_uri: settings.vimeo_default_folder
     }
 
     if (!(this.url = opts.url)) {
