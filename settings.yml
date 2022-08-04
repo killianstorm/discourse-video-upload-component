@@ -10,6 +10,9 @@ vimeo_default_view_privacy:
 vimeo_default_embed_privacy:
   default: public
   description: "Check privacy.embed options on this page: https://developer.vimeo.com/api/reference/videos#edit_video"
+vimeo_default_folder:
+  default: folder
+  description: "Folder to save the videos to"
 youtube_upload_enabled:
   default: false
   description: "Enable upload to YouTube"
