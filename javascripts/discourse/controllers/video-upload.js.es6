@@ -1,5 +1,6 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import 
 
 const STATUS_POLLING_INTERVAL_MILLIS = 10000;
 
@@ -104,29 +105,36 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 uploadError: null
             });
 
-            const checkScopeAndUpload = function () {
-                const authResponse = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse();
-                if (authResponse.scope.indexOf(ytScopes[0]) >= 0 && authResponse.scope.indexOf(ytScopes[1]) >= 0) {
-                    component.sendFileToYoutube()
-                    return true;
-                }
-                return false;
-            }
+            // const checkScopeAndUpload = function () {
+            //     const authResponse = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse();
+            //     if (authResponse.scope.indexOf(ytScopes[0]) >= 0 && authResponse.scope.indexOf(ytScopes[1]) >= 0) {
+            //         component.sendFileToYoutube()
+            //         return true;
+            //     }
+            //     return false;
+            // }
 
-            const ytScopes = ['https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.readonly'];
-            gapi.load('client:auth2', function () {
-                gapi.client.init({
-                    clientId: settings.youtube_api_client_id,
-                    scope: ytScopes.join(' ')
-                }).then(function () {
-                    if (!(gapi.auth2.getAuthInstance().isSignedIn.get() && checkScopeAndUpload()))
-                        gapi.auth2.getAuthInstance().signIn().then(checkScopeAndUpload)
-                })
+            // gapi.load('client:auth2', function () {
+            //     gapi.client.init({
+            //         clientId: settings.youtube_api_client_id,
+            //         scope: ytScopes.join(' ')
+            //     }).then(function () {
+            //         if (!(gapi.auth2.getAuthInstance().isSignedIn.get() && checkScopeAndUpload()))
+            //             gapi.auth2.getAuthInstance().signIn().then(checkScopeAndUpload)
+            //     })
+            // });
+
+            const client = google.accounts.oauth2.initTokenClient({
+                client_id: settings.youtube_api_client_id,
+                scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly',
+                callback: (tokenResponse) => {
+                    sendFileToYoutube(tokenResponse.access_token);
+                },
             });
         }
     },
-    sendFileToYoutube() {
-        const accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+    sendFileToYoutube(token) {
+        const accessToken = token;
         const component = this;
         const file = $("#video-file").prop('files');
         $("#youtube-upload-btn").attr('disabled', 'disabled');
@@ -413,7 +421,7 @@ var VimeoUpload = function(opts) {
             view: opts.view ? opts.view : ( opts.private ? 'nobody' : 'anybody' ),
             embed: opts.embed ? opts.embed : 'public'
         },
-        folder_uri: settings.vimeo_default_folder
+        folder_uri: '/folders/12116692'
     }
 
     if (!(this.url = opts.url)) {
