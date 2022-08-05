@@ -1,6 +1,5 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import 
 
 const STATUS_POLLING_INTERVAL_MILLIS = 10000;
 
