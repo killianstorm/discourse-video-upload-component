@@ -577,7 +577,7 @@ VimeoUpload.prototype.extractRange_ = function(xhr) {
  * @private
  */
 VimeoUpload.prototype.complete_ = function(xhr) {
-    var video_id = this.video_url.split('/').pop()
+    var video_id = this.video_url.split('/')
     this.onComplete(video_id);
 }
 
